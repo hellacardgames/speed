@@ -136,13 +136,14 @@ export class Client {
     gameId: string,
     playerId: string,
     cardId: string,
+    isForOtherPlayerPile: boolean,
   ): Promise<PlayCardResult> {
     const response = await fetch(`${this.baseUrl}/playCard`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ gameId, playerId, cardId }),
+      body: JSON.stringify({ gameId, playerId, cardId, isForOtherPlayerPile }),
     });
     const result = await response.json();
     return result;
