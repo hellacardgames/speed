@@ -11,18 +11,21 @@ import { sendChat } from "./actions/sendChat.js";
 import { startGame } from "./actions/startGame.js";
 
 export const actions = [
-  { path: "/createGame", func: createGame },
-  { path: "/drawCard", func: drawCard },
-  { path: "/getClientStateAndClearEvents", func: getClientStateAndClearEvents },
+  { path: "/createGame", action: createGame },
+  { path: "/drawCard", action: drawCard },
+  {
+    path: "/getClientStateAndClearEvents",
+    action: getClientStateAndClearEvents,
+  },
   {
     path: "/getEventsAndClearAcknowledged",
-    func: getEventsAndClearAcknowledged,
+    action: getEventsAndClearAcknowledged,
   },
-  { path: "/getJoinableGames", func: getJoinableGames },
-  { path: "/joinGame", func: joinGame },
-  { path: "/leaveGame", func: leaveGame },
-  { path: "/playCard", func: playCard },
-  { path: "/reportNoPlayableCards", func: reportNoPlayableCards },
-  { path: "/sendChat", func: sendChat },
-  { path: "/startGame", func: startGame },
+  { path: "/getJoinableGames", action: getJoinableGames },
+  { path: "/joinGame", action: joinGame },
+  { path: "/leaveGame", action: leaveGame },
+  { path: "/playCard", action: playCard },
+  { path: "/reportNoPlayableCards", action: reportNoPlayableCards },
+  { path: "/sendChat", action: sendChat },
+  { path: "/startGame", action: startGame },
 ] as const;
