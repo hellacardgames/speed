@@ -12,9 +12,4 @@ export { reportNoPlayableCards } from "./actions/reportNoPlayableCards.js";
 export { sendChat } from "./actions/sendChat.js";
 export { startGame } from "./actions/startGame.js";
 
-export type { Card } from "./types/Card.js";
-export type { ChatMessage } from "./types/ChatMessage.js";
-export type { ClientState } from "./types/ClientState.js";
-export type { GameEvent } from "./types/GameEvent.js";
-
 watchdog.start();
