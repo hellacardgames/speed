@@ -32,44 +32,15 @@ export type {
   GameEvent,
 };
 
-type ClientConfig = {
-  readonly baseUrl: string;
-  readonly actionUrls: {
-    readonly createGame: string;
-    readonly drawCard: string;
-    readonly getClientStateAndClearEvents: string;
-    readonly getEventsAndClearAcknowledged: string;
-    readonly getJoinableGames: string;
-    readonly joinGame: string;
-    readonly leaveGame: string;
-    readonly playCard: string;
-    readonly reportNoPlayableCards: string;
-    readonly sendChat: string;
-    readonly startGame: string;
-  };
-};
-
 export class Client {
-  private readonly actionUrls: ClientConfig["actionUrls"];
+  private readonly baseUrl: string;
 
-  constructor(config: ClientConfig) {
-    this.actionUrls = {
-      createGame: `${config.baseUrl}${config.actionUrls.createGame}`,
-      drawCard: `${config.baseUrl}${config.actionUrls.drawCard}`,
-      getClientStateAndClearEvents: `${config.baseUrl}${config.actionUrls.getClientStateAndClearEvents}`,
-      getEventsAndClearAcknowledged: `${config.baseUrl}${config.actionUrls.getEventsAndClearAcknowledged}`,
-      getJoinableGames: `${config.baseUrl}${config.actionUrls.getJoinableGames}`,
-      joinGame: `${config.baseUrl}${config.actionUrls.joinGame}`,
-      leaveGame: `${config.baseUrl}${config.actionUrls.leaveGame}`,
-      playCard: `${config.baseUrl}${config.actionUrls.playCard}`,
-      reportNoPlayableCards: `${config.baseUrl}${config.actionUrls.reportNoPlayableCards}`,
-      sendChat: `${config.baseUrl}${config.actionUrls.sendChat}`,
-      startGame: `${config.baseUrl}${config.actionUrls.startGame}`,
-    };
+  constructor(baseUrl: string) {
+    this.baseUrl = baseUrl;
   }
 
   async createGame(accessToken: string): Promise<CreateGameResult> {
-    const response = await fetch(`${this.actionUrls.createGame}`, {
+    const response = await fetch(`${this.baseUrl}/createGame`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -80,7 +51,7 @@ export class Client {
   }
 
   async drawCard(gameId: string, playerId: string): Promise<DrawCardResult> {
-    const response = await fetch(`${this.actionUrls.drawCard}`, {
+    const response = await fetch(`${this.baseUrl}/drawCard`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -96,7 +67,7 @@ export class Client {
     playerId: string,
   ): Promise<GetClientStateAndClearEventsResult> {
     const response = await fetch(
-      `${this.actionUrls.getClientStateAndClearEvents}`,
+      `${this.baseUrl}/getClientStateAndClearEvents`,
       {
         method: "POST",
         headers: {
@@ -115,7 +86,7 @@ export class Client {
     lastReadId: string | null,
   ): Promise<GetEventsAndClearAcknowledgedResult> {
     const response = await fetch(
-      `${this.actionUrls.getEventsAndClearAcknowledged}`,
+      `${this.baseUrl}/getEventsAndClearAcknowledged`,
       {
         method: "POST",
         headers: {
@@ -129,7 +100,7 @@ export class Client {
   }
 
   async getJoinableGames(): Promise<GetJoinableGamesResult> {
-    const response = await fetch(`${this.actionUrls.getJoinableGames}`, {
+    const response = await fetch(`${this.baseUrl}/getJoinableGames`, {
       method: "POST",
     });
     const result = await response.json();
@@ -137,7 +108,7 @@ export class Client {
   }
 
   async joinGame(gameId: string, accessToken: string): Promise<JoinGameResult> {
-    const response = await fetch(`${this.actionUrls.joinGame}`, {
+    const response = await fetch(`${this.baseUrl}/joinGame`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -150,7 +121,7 @@ export class Client {
   }
 
   async leaveGame(gameId: string, playerId: string): Promise<LeaveGameResult> {
-    const response = await fetch(`${this.actionUrls.leaveGame}`, {
+    const response = await fetch(`${this.baseUrl}/leaveGame`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -166,7 +137,7 @@ export class Client {
     playerId: string,
     cardId: string,
   ): Promise<PlayCardResult> {
-    const response = await fetch(`${this.actionUrls.playCard}`, {
+    const response = await fetch(`${this.baseUrl}/playCard`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -181,7 +152,7 @@ export class Client {
     gameId: string,
     playerId: string,
   ): Promise<ReportNoPlayableCardsResult> {
-    const response = await fetch(`${this.actionUrls.reportNoPlayableCards}`, {
+    const response = await fetch(`${this.baseUrl}/reportNoPlayableCards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +168,7 @@ export class Client {
     playerId: string,
     text: string,
   ): Promise<SendChatResult> {
-    const response = await fetch(`${this.actionUrls.sendChat}`, {
+    const response = await fetch(`${this.baseUrl}/sendChat`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -209,7 +180,7 @@ export class Client {
   }
 
   async startGame(gameId: string, playerId: string): Promise<StartGameResult> {
-    const response = await fetch(`${this.actionUrls.startGame}`, {
+    const response = await fetch(`${this.baseUrl}/startGame`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
