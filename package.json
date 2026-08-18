@@ -1,0 +1,92 @@
+{
+  "name": "@hellacardgames/speed",
+  "version": "0.1.0",
+  "description": "A TypeScript library implementing the Speed card game.",
+  "type": "module",
+  "license": "MIT",
+  "author": {
+    "name": "Richard Gieg"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/hellacardgames/speed.git"
+  },
+  "bugs": {
+    "url": "https://github.com/hellacardgames/speed/issues"
+  },
+  "homepage": "https://github.com/hellacardgames/speed#readme",
+  "main": "./dist/game/index.cjs",
+  "types": "./dist/game/index.d.cts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/game/index.d.mts",
+        "default": "./dist/game/index.mjs"
+      },
+      "require": {
+        "types": "./dist/game/index.d.cts",
+        "default": "./dist/game/index.cjs"
+      }
+    },
+    "./manager": {
+      "import": {
+        "types": "./dist/manager/index.d.mts",
+        "default": "./dist/manager/index.mjs"
+      },
+      "require": {
+        "types": "./dist/manager/index.d.cts",
+        "default": "./dist/manager/index.cjs"
+      }
+    },
+    "./server": {
+      "import": {
+        "types": "./dist/server/index.d.mts",
+        "default": "./dist/server/index.mjs"
+      },
+      "require": {
+        "types": "./dist/server/index.d.cts",
+        "default": "./dist/server/index.cjs"
+      }
+    },
+    "./client": {
+      "import": {
+        "types": "./dist/client/index.d.mts",
+        "default": "./dist/client/index.mjs"
+      },
+      "require": {
+        "types": "./dist/client/index.d.cts",
+        "default": "./dist/client/index.cjs"
+      }
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsdown",
+    "typecheck": "tsc --noEmit",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.1.0",
+    "eslint": "^10.6.0",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.7.0",
+    "jiti": "^2.7.0",
+    "prettier": "^3.9.4",
+    "tsdown": "^0.22.3",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.62.1",
+    "vitest": "^4.1.9"
+  },
+  "dependencies": {
+    "@hellacardgames/lib": "^0.5.1",
+    "zod": "^4.4.3"
+  }
+}
