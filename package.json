@@ -86,7 +86,7 @@
     "vitest": "^4.1.9"
   },
   "dependencies": {
-    "@hellacardgames/lib": "^0.5.1",
+    "@hellacardgames/lib": "^0.5.2",
     "zod": "^4.4.3"
   }
 }
