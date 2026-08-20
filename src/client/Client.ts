@@ -12,6 +12,20 @@ import type {
   StartGameResult,
 } from "../server/index.js";
 
+export type {
+  CreateGameResult,
+  DrawCardResult,
+  GetClientStateAndClearEventsResult,
+  GetEventsAndClearAcknowledgedResult,
+  GetJoinableGamesResult,
+  JoinGameResult,
+  LeaveGameResult,
+  PlayCardResult,
+  ReportNoPlayableCardsResult,
+  SendChatResult,
+  StartGameResult,
+};
+
 export class Client {
   private readonly baseUrl: string;
 

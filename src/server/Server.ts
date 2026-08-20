@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { Manager } from "../manager2/index.js";
-import type { ClientState, GameEvent } from "../manager2/index.js";
+import { Manager } from "../manager/index.js";
+import type { ClientState, GameEvent } from "../manager/index.js";
 
 export type CreateGameResult =
   | {
