@@ -1,13 +1,12 @@
+import { ManagerBase } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   CARDS,
   EXPIRY_EXTENSION_MS,
-  MAX_GAMES,
   MAX_HAND_SIZE,
   MAX_PLAYERS,
   MIN_PLAYERS,
 } from "./constants.js";
-import { Watchdog } from "./Watchdog.js";
 import { emitEvent } from "../lib/emitEvent.js";
 import { emitEventToPlayer } from "../lib/emitEventToPlayer.js";
 import { isCardPlayable } from "./lib/isCardPlayable.js";
@@ -149,18 +148,9 @@ export type StartGameResult =
         | "minPlayersNotReached";
     };
 
-export class Manager {
-  private readonly games: Map<string, Game>;
-  private readonly watchdog: Watchdog<Game>;
-
-  constructor() {
-    this.games = new Map<string, Game>();
-    this.watchdog = new Watchdog(this.games);
-    this.watchdog.start();
-  }
-
+export class Manager extends ManagerBase<Game> {
   createGame(userId: string, username: string): CreateGameResult {
-    if (this.games.size === MAX_GAMES) {
+    if (this.games.size === this.maxGames) {
       return { success: false, error: "maxGamesReached" };
     }
     const player: Player = {

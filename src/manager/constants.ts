@@ -1,9 +1,5 @@
 import type { Card } from "./types/Card.js";
 
-export const GAME_KEY = "speed";
-export const MAX_GAMES = 50;
-export const WATCHDOG_INTERVAL_MS = 10000;
-
 export const EXPIRY_EXTENSION_MS = 300000; // 5 minutes
 export const MIN_PLAYERS = 2;
 export const MAX_PLAYERS = 2;
