@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getEventsAndClearAcknowledged as doGetEventsAndClearAcknowledged } from "../../manager/actions/getEventsAndClearAcknowledged.js";
-import type { GameEvent } from "../../manager/types/GameEvent.js";
+import { getEventsAndClearAcknowledged as doGetEventsAndClearAcknowledged } from "../../manager/index.js";
+import type { GameEvent } from "../../manager/index.js";
 
 export type GetEventsAndClearAcknowledgedResult =
   | {

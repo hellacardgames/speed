@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { playCard as doPlayCard } from "../../manager/actions/playCard.js";
+import { playCard as doPlayCard } from "../../manager/index.js";
 
 export type PlayCardResult =
   | {

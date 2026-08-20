@@ -1,6 +1,6 @@
 import { z } from "zod";
-import { getClientStateAndClearEvents as doGetClientStateAndClearEvents } from "../../manager/actions/getClientStateAndClearEvents.js";
-import type { ClientState } from "../../manager/types/ClientState.js";
+import { getClientStateAndClearEvents as doGetClientStateAndClearEvents } from "../../manager/index.js";
+import type { ClientState } from "../../manager/index.js";
 
 export type GetClientStateAndClearEventsResult =
   | {

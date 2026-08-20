@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sendChat as doSendChat } from "../../manager/actions/sendChat.js";
+import { sendChat as doSendChat } from "../../manager/index.js";
 
 export type SendChatResult =
   | {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { reportNoPlayableCards as doReportNoPlayableCards } from "../../manager/actions/reportNoPlayableCards.js";
+import { reportNoPlayableCards as doReportNoPlayableCards } from "../../manager/index.js";
 
 export type ReportNoPlayableCardsResult =
   | {

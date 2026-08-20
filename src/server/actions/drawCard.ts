@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { drawCard as doDrawCard } from "../../manager/actions/drawCard.js";
+import { drawCard as doDrawCard } from "../../manager/index.js";
 
 export type DrawCardResult =
   | {

@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { leaveGame as doLeaveGame } from "../../manager/actions/leaveGame.js";
+import { leaveGame as doLeaveGame } from "../../manager/index.js";
 
 export type LeaveGameResult =
   | {

@@ -1,4 +1,4 @@
-import { createGame as doCreateGame } from "../../manager/actions/createGame.js";
+import { createGame as doCreateGame } from "../../manager/index.js";
 
 export type CreateGameResult =
   | {

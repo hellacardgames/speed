@@ -1,4 +1,4 @@
-import { getJoinableGames as doGetJoinableGames } from "../../manager/actions/getJoinableGames.js";
+import { getJoinableGames as doGetJoinableGames } from "../../manager/index.js";
 
 export type GetJoinableGamesResult = {
   readonly games: readonly {

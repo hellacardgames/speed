@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { joinGame as doJoinGame } from "../../manager/actions/joinGame.js";
+import { joinGame as doJoinGame } from "../../manager/index.js";
 
 export type JoinGameResult =
   | {

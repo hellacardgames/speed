@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { startGame as doStartGame } from "../../manager/actions/startGame.js";
+import { startGame as doStartGame } from "../../manager/index.js";
 
 export type StartGameResult =
   | {
