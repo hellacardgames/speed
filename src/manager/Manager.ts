@@ -33,8 +33,8 @@ export type DrawCardResult =
       readonly success: false;
       readonly error:
         | "gameNotFound"
-        | "playerNotFound"
         | "invalidStatus"
+        | "playerNotFound"
         | "canPlayAtNotReached"
         | "handFull"
         | "drawPileEmpty";
@@ -98,8 +98,8 @@ export type PlayCardResult =
       readonly success: false;
       readonly error:
         | "gameNotFound"
-        | "playerNotFound"
         | "invalidStatus"
+        | "playerNotFound"
         | "canPlayAtNotReached"
         | "cardNotFound"
         | "cardNotPlayable";
@@ -113,8 +113,8 @@ export type ReportNoPlayableCardsResult =
       readonly success: false;
       readonly error:
         | "gameNotFound"
-        | "playerNotFound"
         | "invalidStatus"
+        | "playerNotFound"
         | "canPlayAtNotReached"
         | "alreadyReported"
         | "hasPlayableCard"
