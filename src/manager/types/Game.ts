@@ -1,10 +1,10 @@
 import type { ChatMessage } from "./ChatMessage.js";
 import type { Player } from "./Player.js";
 
-export type Game = OpenGame | StartedGame | CompletedGame | ForfeitedGame;
+export type Game = CreatedGame | StartedGame | CompletedGame | ForfeitedGame;
 
-type OpenGame = {
-  readonly status: "open";
+type CreatedGame = {
+  readonly status: "created";
   readonly id: string;
   readonly createdAt: number;
   readonly expiresAt: number;
