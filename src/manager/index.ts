@@ -14,7 +14,9 @@ export type {
   StartGameResult,
 } from "./Manager.js";
 
-export type { Card } from "./types/Card.js";
-export type { ChatMessage } from "./types/ChatMessage.js";
-export type { ClientState } from "./types/ClientState.js";
-export type { GameEvent } from "./types/GameEvent.js";
+export type {
+  Card,
+  ChatMessage,
+  ClientState,
+  GameEvent,
+} from "../game/index.js";
