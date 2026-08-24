@@ -25,6 +25,7 @@ export function leaveGame(game: Game, playerId: string) {
       type: "expirationUpdated",
       expiresAt: forfeitedGame.expiresAt,
     });
+    return { success: true, game: forfeitedGame } as const;
   }
   return { success: true, game } as const;
 }
