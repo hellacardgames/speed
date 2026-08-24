@@ -9,7 +9,6 @@ import {
   MAX_PLAYERS,
   playCard,
   reportNoPlayableCards,
-  sendChat,
   startGame,
 } from "../game/index.js";
 
@@ -20,7 +19,6 @@ export const createManager = createManagerFactory({
   getEventsAndClearAcknowledged,
   joinGame,
   leaveGame,
-  sendChat,
   startGame,
   createCustomActions: (games) => ({
     drawCard: (gameId: string, playerId: string) => {

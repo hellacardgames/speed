@@ -1,5 +1,1 @@
-export type ChatMessage = {
-  readonly id: string;
-  readonly username: string;
-  readonly text: string;
-};
+export type { ChatMessage } from "@hellacardgames/lib";

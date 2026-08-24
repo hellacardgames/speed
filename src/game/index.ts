@@ -8,7 +8,6 @@ export { joinGame } from "./actions/joinGame.js";
 export { leaveGame } from "./actions/leaveGame.js";
 export { playCard } from "./actions/playCard.js";
 export { reportNoPlayableCards } from "./actions/reportNoPlayableCards.js";
-export { sendChat } from "./actions/sendChat.js";
 export { startGame } from "./actions/startGame.js";
 
 export type { Card } from "./types/Card.js";
