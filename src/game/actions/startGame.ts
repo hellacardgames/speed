@@ -9,30 +9,16 @@ import {
 } from "../constants.js";
 import type { CreatedGame, StartedGame } from "../types/Game.js";
 
-type StartGameResult =
-  | {
-      readonly success: true;
-      readonly game: StartedGame;
-    }
-  | {
-      readonly success: false;
-      readonly error:
-        "playerNotFound" | "playerNotAdmin" | "minPlayersNotReached";
-    };
-
-export function startGame(
-  game: CreatedGame,
-  playerId: string,
-): StartGameResult {
+export function startGame(game: CreatedGame, playerId: string) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
-    return { success: false, error: "playerNotFound" };
+    return { success: false, error: "playerNotFound" } as const;
   }
   if (game.players.indexOf(player) !== 0) {
-    return { success: false, error: "playerNotAdmin" };
+    return { success: false, error: "playerNotAdmin" } as const;
   }
   if (game.players.length < MIN_PLAYERS) {
-    return { success: false, error: "minPlayersNotReached" };
+    return { success: false, error: "minPlayersNotReached" } as const;
   }
   const otherPlayer = game.players[1]!;
   const cards = [...CARDS];
@@ -115,5 +101,5 @@ export function startGame(
     type: "canPlayAtUpdated",
     canPlayAt: startedGame.canPlayAt,
   });
-  return { success: true, game: startedGame };
+  return { success: true, game: startedGame } as const;
 }

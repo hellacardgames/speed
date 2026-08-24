@@ -4,36 +4,22 @@ import { hasPlayableCard } from "../lib/hasPlayableCard.js";
 import { isCardPlayable } from "../lib/isCardPlayable.js";
 import type { CompletedGame, StartedGame } from "../types/Game.js";
 
-type PlayCardResult =
-  | {
-      readonly success: true;
-      readonly game: StartedGame | CompletedGame;
-    }
-  | {
-      readonly success: false;
-      readonly error:
-        | "playerNotFound"
-        | "canPlayAtNotReached"
-        | "cardNotFound"
-        | "cardNotPlayable";
-    };
-
 export function playCard(
   game: StartedGame,
   playerId: string,
   cardId: string,
   isForOtherPlayerPile: boolean,
-): PlayCardResult {
+) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
-    return { success: false, error: "playerNotFound" };
+    return { success: false, error: "playerNotFound" } as const;
   }
   if (Date.now() < game.canPlayAt) {
-    return { success: false, error: "canPlayAtNotReached" };
+    return { success: false, error: "canPlayAtNotReached" } as const;
   }
   const cardIndex = player.hand.findIndex((c) => c.id === cardId);
   if (cardIndex === -1) {
-    return { success: false, error: "cardNotFound" };
+    return { success: false, error: "cardNotFound" } as const;
   }
   const otherPlayer = game.players.find((p) => p !== player)!;
   const targetPile = isForOtherPlayerPile
@@ -41,7 +27,7 @@ export function playCard(
     : player.centerPile;
   const card = player.hand[cardIndex]!;
   if (!isCardPlayable(card, targetPile)) {
-    return { success: false, error: "cardNotPlayable" };
+    return { success: false, error: "cardNotPlayable" } as const;
   }
 
   game.expiresAt = Date.now() + EXPIRY_EXTENSION_MS;
@@ -66,8 +52,8 @@ export function playCard(
       ...game,
       status: "completed",
     };
-    return { success: true, game: completedGame };
+    return { success: true, game: completedGame } as const;
   }
 
-  return { success: true, game };
+  return { success: true, game } as const;
 }

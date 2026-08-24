@@ -2,24 +2,10 @@ import { addItemToCollection, emitEvent } from "@hellacardgames/lib";
 import type { ChatMessage } from "../types/ChatMessage.js";
 import type { Game } from "../types/Game.js";
 
-type SendChatResult =
-  | {
-      readonly success: true;
-      readonly game: Game;
-    }
-  | {
-      readonly success: false;
-      readonly error: "playerNotFound";
-    };
-
-export function sendChat(
-  game: Game,
-  playerId: string,
-  text: string,
-): SendChatResult {
+export function sendChat(game: Game, playerId: string, text: string) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
-    return { success: false, error: "playerNotFound" };
+    return { success: false, error: "playerNotFound" } as const;
   }
 
   const message: ChatMessage = {
@@ -35,5 +21,5 @@ export function sendChat(
 
   game = emitEvent(game, { type: "chat", message });
 
-  return { success: true, game };
+  return { success: true, game } as const;
 }

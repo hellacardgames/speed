@@ -8,40 +8,22 @@ import {
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
 import type { StartedGame } from "../types/Game.js";
 
-type ReportNoPlayableCardsResult =
-  | {
-      readonly success: true;
-      readonly game: StartedGame;
-    }
-  | {
-      readonly success: false;
-      readonly error:
-        | "playerNotFound"
-        | "canPlayAtNotReached"
-        | "alreadyReported"
-        | "hasPlayableCard"
-        | "canDraw";
-    };
-
-export function reportNoPlayableCards(
-  game: StartedGame,
-  playerId: string,
-): ReportNoPlayableCardsResult {
+export function reportNoPlayableCards(game: StartedGame, playerId: string) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
-    return { success: false, error: "playerNotFound" };
+    return { success: false, error: "playerNotFound" } as const;
   }
   if (Date.now() < game.canPlayAt) {
-    return { success: false, error: "canPlayAtNotReached" };
+    return { success: false, error: "canPlayAtNotReached" } as const;
   }
   if (player.hasNoPlayableCards) {
-    return { success: false, error: "alreadyReported" };
+    return { success: false, error: "alreadyReported" } as const;
   }
   if (hasPlayableCard(player, game)) {
-    return { success: false, error: "hasPlayableCard" };
+    return { success: false, error: "hasPlayableCard" } as const;
   }
   if (player.drawPile.length > 0 && player.hand.length < MAX_HAND_SIZE) {
-    return { success: false, error: "canDraw" };
+    return { success: false, error: "canDraw" } as const;
   }
 
   game.expiresAt = Date.now() + EXPIRY_EXTENSION_MS;
@@ -103,5 +85,5 @@ export function reportNoPlayableCards(
     });
   }
 
-  return { success: true, game };
+  return { success: true, game } as const;
 }
