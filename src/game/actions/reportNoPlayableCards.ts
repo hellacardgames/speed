@@ -6,12 +6,15 @@ import {
   MAX_HAND_SIZE,
 } from "../constants.js";
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
-import type { StartedGame } from "../types/Game.js";
+import type { Game } from "../types/Game.js";
 
-export function reportNoPlayableCards(game: StartedGame, playerId: string) {
+export function reportNoPlayableCards(game: Game, playerId: string) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
+  }
+  if (game.status !== "started") {
+    return { success: false, error: "invalidStatus" } as const;
   }
   if (Date.now() < game.canPlayAt) {
     return { success: false, error: "canPlayAtNotReached" } as const;

@@ -1,9 +1,12 @@
 import { emitEvent } from "../lib/emitEvent.js";
 import { MAX_PLAYERS } from "../constants.js";
-import type { CreatedGame } from "../types/Game.js";
+import type { Game } from "../types/Game.js";
 import type { Player } from "../types/Player.js";
 
-export function joinGame(game: CreatedGame, userId: string, username: string) {
+export function joinGame(game: Game, userId: string, username: string) {
+  if (game.status !== "created") {
+    return { success: false, error: "invalidStatus" } as const;
+  }
   if (game.players.length === MAX_PLAYERS) {
     return { success: false, error: "maxPlayersReached" } as const;
   }

@@ -2,10 +2,10 @@ import { emitEvent } from "../lib/emitEvent.js";
 import { EXPIRY_EXTENSION_MS } from "../constants.js";
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
 import { isCardPlayable } from "../lib/isCardPlayable.js";
-import type { CompletedGame, StartedGame } from "../types/Game.js";
+import type { CompletedGame, Game } from "../types/Game.js";
 
 export function playCard(
-  game: StartedGame,
+  game: Game,
   playerId: string,
   cardId: string,
   isForOtherPlayerPile: boolean,
@@ -13,6 +13,9 @@ export function playCard(
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
+  }
+  if (game.status !== "started") {
+    return { success: false, error: "invalidStatus" } as const;
   }
   if (Date.now() < game.canPlayAt) {
     return { success: false, error: "canPlayAtNotReached" } as const;

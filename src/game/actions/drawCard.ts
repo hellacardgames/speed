@@ -1,12 +1,15 @@
 import { emitEvent } from "../lib/emitEvent.js";
 import { emitEventToPlayer } from "../lib/emitEventToPlayer.js";
 import { EXPIRY_EXTENSION_MS, MAX_HAND_SIZE } from "../constants.js";
-import type { StartedGame } from "../types/Game.js";
+import type { Game } from "../types/Game.js";
 
-export function drawCard(game: StartedGame, playerId: string) {
+export function drawCard(game: Game, playerId: string) {
   const player = game.players.find((p) => p.id === playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
+  }
+  if (game.status !== "started") {
+    return { success: false, error: "invalidStatus" } as const;
   }
   if (Date.now() < game.canPlayAt) {
     return { success: false, error: "canPlayAtNotReached" } as const;
