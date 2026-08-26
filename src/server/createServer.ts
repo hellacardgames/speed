@@ -9,6 +9,7 @@ export const createServer = createServerFactory(createManager, {
       playerId: z.string(),
     })
     .transform(({ gameId, playerId }) => [gameId, playerId] as const),
+
   playCard: z
     .object({
       gameId: z.string(),
@@ -20,6 +21,7 @@ export const createServer = createServerFactory(createManager, {
       ({ gameId, playerId, cardId, isForOtherPlayerPile }) =>
         [gameId, playerId, cardId, isForOtherPlayerPile] as const,
     ),
+
   reportNoPlayableCards: z
     .object({
       gameId: z.string(),
