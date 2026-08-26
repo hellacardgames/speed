@@ -5,10 +5,10 @@ type Server = ReturnType<typeof createServer>;
 type ServerResult<
   TServer extends {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    actions: readonly { path: string; action: (...args: any[]) => any }[];
+    routes: readonly { path: string; action: (...args: any[]) => any }[];
   },
-  TPath extends TServer["actions"][number]["path"],
-> = ReturnType<Extract<TServer["actions"][number], { path: TPath }>["action"]>;
+  TPath extends TServer["routes"][number]["path"],
+> = ReturnType<Extract<TServer["routes"][number], { path: TPath }>["action"]>;
 
 export class Client {
   private readonly baseUrl: string;
