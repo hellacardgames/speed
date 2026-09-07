@@ -5,10 +5,10 @@ export type Player = {
   readonly id: string;
   readonly userId: string;
   readonly username: string;
-  readonly events: GameEvent[];
-  readonly hand: Card[];
-  readonly drawPile: Card[];
-  readonly sidePile: Card[];
-  readonly centerPile: Card[];
-  hasNoPlayableCards: boolean;
+  readonly events: readonly GameEvent[];
+  readonly hand: readonly Card[];
+  readonly drawPile: readonly Card[];
+  readonly sidePile: readonly Card[];
+  readonly centerPile: readonly Card[];
+  readonly hasNoPlayableCards: boolean;
 };

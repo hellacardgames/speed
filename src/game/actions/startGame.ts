@@ -1,13 +1,17 @@
-import { emitEvent } from "../lib/emitEvent.js";
-import { emitEventToPlayer } from "../lib/emitEventToPlayer.js";
-import { shuffleCards } from "../lib/shuffleCards.js";
+import { emitEvent, shuffle } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   CARDS,
   EXPIRY_EXTENSION_MS,
   MIN_PLAYERS,
 } from "../constants.js";
-import type { Game, StartedGame } from "../types/Game.js";
+import { initializeCenterPile } from "../lib/initializeCenterPile.js";
+import { initializeDrawPile } from "../lib/initializeDrawPile.js";
+import { initializeHand } from "../lib/initializeHand.js";
+import { initializeSidePile } from "../lib/initializeSidePile.js";
+import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
+import { transitionGameToStarted } from "../lib/transitionGameToStarted.js";
+import type { Game } from "../types/Game.js";
 
 export function startGame(game: Game, playerId: string) {
   const player = game.players.find((p) => p.id === playerId);
@@ -23,86 +27,39 @@ export function startGame(game: Game, playerId: string) {
   if (game.players.length < MIN_PLAYERS) {
     return { success: false, error: "minPlayersNotReached" } as const;
   }
-  const otherPlayer = game.players[1]!;
-  const cards = [...CARDS];
-  shuffleCards(cards);
 
-  player.sidePile.push(...cards.splice(0, 5));
-  emitEvent(game, {
-    type: "playerSidePileInitialized",
-    username: player.username,
-    numCards: player.sidePile.length,
-  });
+  game = transitionGameToStarted(game);
 
-  player.centerPile.push(...cards.splice(0, 1));
-  emitEvent(game, {
-    type: "playerCenterPileInitialized",
-    username: player.username,
-    card: player.centerPile[player.centerPile.length - 1]!,
-  });
+  const otherPlayer = requireOtherPlayer(game, player.id);
 
-  otherPlayer.centerPile.push(...cards.splice(0, 1));
-  emitEvent(game, {
-    type: "playerCenterPileInitialized",
-    username: otherPlayer.username,
-    card: otherPlayer.centerPile[otherPlayer.centerPile.length - 1]!,
-  });
+  let cards = [...CARDS] as const;
+  cards = shuffle(cards);
 
-  otherPlayer.sidePile.push(...cards.splice(0, 5));
-  emitEvent(game, {
-    type: "playerSidePileInitialized",
-    username: otherPlayer.username,
-    numCards: otherPlayer.sidePile.length,
-  });
+  ({ game, cards } = initializeSidePile(game, player.id, cards));
+  ({ game, cards } = initializeCenterPile(game, player.id, cards));
 
-  player.drawPile.push(...cards.splice(0, 15));
-  emitEvent(game, {
-    type: "playerDrawPileInitialized",
-    username: player.username,
-    numCards: player.drawPile.length,
-  });
+  ({ game, cards } = initializeCenterPile(game, otherPlayer.id, cards));
+  ({ game, cards } = initializeSidePile(game, otherPlayer.id, cards));
 
-  player.hand.push(...cards.splice(0, 5));
-  emitEventToPlayer(player, { type: "handInitialized", cards: player.hand });
-  emitEvent(game, {
-    type: "playerHandInitialized",
-    username: player.username,
-    numCards: player.hand.length,
-  });
+  ({ game, cards } = initializeDrawPile(game, player.id, cards));
+  ({ game, cards } = initializeHand(game, player.id, cards));
 
-  otherPlayer.drawPile.push(...cards.splice(0, 15));
-  emitEvent(game, {
-    type: "playerDrawPileInitialized",
-    username: otherPlayer.username,
-    numCards: otherPlayer.drawPile.length,
-  });
+  ({ game, cards } = initializeDrawPile(game, otherPlayer.id, cards));
+  ({ game } = initializeHand(game, otherPlayer.id, cards));
 
-  otherPlayer.hand.push(...cards.splice(0, 5));
-  emitEventToPlayer(otherPlayer, {
-    type: "handInitialized",
-    cards: otherPlayer.hand,
-  });
-  emitEvent(game, {
-    type: "playerHandInitialized",
-    username: otherPlayer.username,
-    numCards: otherPlayer.hand.length,
-  });
-
-  const startedGame: StartedGame = {
-    ...game,
-    status: "started",
-    expiresAt: Date.now() + EXPIRY_EXTENSION_MS,
-    canPlayAt: Date.now() + CAN_PLAY_AT_DELAY_MS,
-  };
-  // this.games.set(game.id, startedGame);
-  emitEvent(startedGame, { type: "gameStarted" });
-  emitEvent(startedGame, {
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
     type: "expirationUpdated",
-    expiresAt: startedGame.expiresAt,
+    expiresAt: game.expiresAt,
   });
-  emitEvent(startedGame, {
+
+  game = { ...game, canPlayAt: Date.now() + CAN_PLAY_AT_DELAY_MS };
+  game = emitEvent(game, {
     type: "canPlayAtUpdated",
-    canPlayAt: startedGame.canPlayAt,
+    canPlayAt: game.canPlayAt,
   });
-  return { success: true, game: startedGame } as const;
+
+  game = emitEvent(game, { type: "gameStarted" });
+
+  return { success: true, game } as const;
 }

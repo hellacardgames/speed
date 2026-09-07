@@ -1,11 +1,14 @@
-import { emitEvent } from "../lib/emitEvent.js";
-import { shuffleCards } from "../lib/shuffleCards.js";
+import { emitEvent, shuffle, updatePlayer } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   EXPIRY_EXTENSION_MS,
   MAX_HAND_SIZE,
 } from "../constants.js";
+import { drawCardFromSidePileToCenterPile } from "../lib/drawCardFromSidePileToCenterPile.js";
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
+import { initializeCenterPile } from "../lib/initializeCenterPile.js";
+import { initializeSidePile } from "../lib/initializeSidePile.js";
+import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
 import type { Game } from "../types/Game.js";
 
 export function reportNoPlayableCards(game: Game, playerId: string) {
@@ -22,67 +25,51 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
   if (player.hasNoPlayableCards) {
     return { success: false, error: "alreadyReported" } as const;
   }
-  if (hasPlayableCard(player, game)) {
+  if (hasPlayableCard(game, player.id)) {
     return { success: false, error: "hasPlayableCard" } as const;
   }
   if (player.drawPile.length > 0 && player.hand.length < MAX_HAND_SIZE) {
     return { success: false, error: "canDraw" } as const;
   }
 
-  game.expiresAt = Date.now() + EXPIRY_EXTENSION_MS;
-  emitEvent(game, { type: "expirationUpdated", expiresAt: game.expiresAt });
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
+  });
 
-  player.hasNoPlayableCards = true;
+  game = updatePlayer(game, player.id, (p) => ({
+    ...p,
+    hasNoPlayableCards: true,
+  }));
 
-  const otherPlayer = game.players.find((p) => p !== player)!;
+  const otherPlayer = requireOtherPlayer(game, player.id);
+
   if (otherPlayer.hasNoPlayableCards) {
     if (player.sidePile.length === 0 && otherPlayer.sidePile.length === 0) {
-      const cards = [...player.centerPile, ...otherPlayer.centerPile];
-      shuffleCards(cards);
-      player.sidePile.push(...cards.splice(0, 5));
-      emitEvent(game, {
-        type: "playerSidePileInitialized",
-        username: player.username,
-        numCards: player.sidePile.length,
-      });
-      player.centerPile.push(...cards.splice(0, 1));
-      emitEvent(game, {
-        type: "playerCenterPileInitialized",
-        username: player.username,
-        card: player.centerPile[player.centerPile.length - 1]!,
-      });
-      otherPlayer.centerPile.push(...cards.splice(0, 1));
-      emitEvent(game, {
-        type: "playerCenterPileInitialized",
-        username: otherPlayer.username,
-        card: otherPlayer.centerPile[otherPlayer.centerPile.length - 1]!,
-      });
-      otherPlayer.sidePile.push(...cards.splice(0, 5));
-      emitEvent(game, {
-        type: "playerSidePileInitialized",
-        username: otherPlayer.username,
-        numCards: otherPlayer.sidePile.length,
-      });
+      let cards = [...player.centerPile, ...otherPlayer.centerPile] as const;
+      cards = shuffle(cards);
+
+      ({ game, cards } = initializeSidePile(game, player.id, cards));
+      ({ game, cards } = initializeCenterPile(game, player.id, cards));
+      ({ game, cards } = initializeCenterPile(game, otherPlayer.id, cards));
+      ({ game } = initializeSidePile(game, otherPlayer.id, cards));
     } else {
-      const playerSidePileCard = player.sidePile.pop()!;
-      player.centerPile.push(playerSidePileCard);
-      emitEvent(game, {
-        type: "cardDrawnFromSidePileToCenterPile",
-        username: player.username,
-        card: playerSidePileCard,
-      });
-      const otherPlayerSidePileCard = otherPlayer.sidePile.pop()!;
-      otherPlayer.centerPile.push(otherPlayerSidePileCard);
-      emitEvent(game, {
-        type: "cardDrawnFromSidePileToCenterPile",
-        username: otherPlayer.username,
-        card: otherPlayerSidePileCard,
-      });
+      game = drawCardFromSidePileToCenterPile(game, player.id);
+      game = drawCardFromSidePileToCenterPile(game, otherPlayer.id);
     }
-    player.hasNoPlayableCards = false;
-    otherPlayer.hasNoPlayableCards = false;
-    game.canPlayAt = Date.now() + CAN_PLAY_AT_DELAY_MS;
-    emitEvent(game, {
+
+    game = updatePlayer(game, player.id, (p) => ({
+      ...p,
+      hasNoPlayableCards: false,
+    }));
+    game = updatePlayer(game, otherPlayer.id, (p) => ({
+      ...p,
+      hasNoPlayableCards: false,
+    }));
+
+    game = { ...game, canPlayAt: Date.now() + CAN_PLAY_AT_DELAY_MS };
+    game = emitEvent(game, {
       type: "canPlayAtUpdated",
       canPlayAt: game.canPlayAt,
     });

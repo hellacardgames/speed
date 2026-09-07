@@ -1,8 +1,16 @@
-import { emitEvent } from "../lib/emitEvent.js";
+import {
+  addItemToCollection,
+  emitEvent,
+  removeItemFromCollection,
+  updatePlayer,
+} from "@hellacardgames/lib";
 import { EXPIRY_EXTENSION_MS } from "../constants.js";
-import { hasPlayableCard } from "../lib/hasPlayableCard.js";
+import { clearHasNoPlayableCardsIfNotApplicable } from "../lib/clearHasNoPlayableCardsIfNotApplicable.js";
 import { isCardPlayable } from "../lib/isCardPlayable.js";
-import type { CompletedGame, Game } from "../types/Game.js";
+import { isOutOfCards } from "../lib/isOutOfCards.js";
+import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
+import { transitionGameToCompleted } from "../lib/transitionGameToCompleted.js";
+import type { Game } from "../types/Game.js";
 
 export function playCard(
   game: Game,
@@ -20,42 +28,44 @@ export function playCard(
   if (Date.now() < game.canPlayAt) {
     return { success: false, error: "canPlayAtNotReached" } as const;
   }
-  const cardIndex = player.hand.findIndex((c) => c.id === cardId);
-  if (cardIndex === -1) {
+  const card = player.hand.find((c) => c.id === cardId);
+  if (!card) {
     return { success: false, error: "cardNotFound" } as const;
   }
-  const otherPlayer = game.players.find((p) => p !== player)!;
-  const targetPile = isForOtherPlayerPile
-    ? otherPlayer.centerPile
-    : player.centerPile;
-  const card = player.hand[cardIndex]!;
-  if (!isCardPlayable(card, targetPile)) {
+  const otherPlayer = requireOtherPlayer(game, player.id);
+  const targetPlayer = isForOtherPlayerPile ? otherPlayer : player;
+  if (!isCardPlayable(card, targetPlayer.centerPile)) {
     return { success: false, error: "cardNotPlayable" } as const;
   }
 
-  game.expiresAt = Date.now() + EXPIRY_EXTENSION_MS;
-  emitEvent(game, { type: "expirationUpdated", expiresAt: game.expiresAt });
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
+  });
 
-  player.hand.splice(cardIndex, 1);
-  targetPile.push(card);
-  emitEvent(game, {
+  game = updatePlayer(game, player.id, (p) => ({
+    ...p,
+    hand: removeItemFromCollection(p.hand, card),
+  }));
+
+  game = updatePlayer(game, targetPlayer.id, (p) => ({
+    ...p,
+    centerPile: addItemToCollection(p.centerPile, card),
+  }));
+
+  game = emitEvent(game, {
     type: "cardPlayed",
     username: player.username,
     card,
     isForOtherPlayerPile,
   });
 
-  if (otherPlayer.hasNoPlayableCards && hasPlayableCard(otherPlayer, game)) {
-    otherPlayer.hasNoPlayableCards = false;
-  }
+  game = clearHasNoPlayableCardsIfNotApplicable(game, otherPlayer.id);
 
-  if (player.hand.length === 0 && player.drawPile.length === 0) {
-    emitEvent(game, { type: "gameCompleted" });
-    const completedGame: CompletedGame = {
-      ...game,
-      status: "completed",
-    };
-    return { success: true, game: completedGame } as const;
+  if (isOutOfCards(game, player.id)) {
+    game = transitionGameToCompleted(game);
+    game = emitEvent(game, { type: "gameCompleted" });
   }
 
   return { success: true, game } as const;
