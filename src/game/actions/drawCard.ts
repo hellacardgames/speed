@@ -26,12 +26,6 @@ export function drawCard(game: Game, playerId: string) {
     return { success: false, error: "drawPileEmpty" } as const;
   }
 
-  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
-  game = emitEvent(game, {
-    type: "expirationUpdated",
-    expiresAt: game.expiresAt,
-  });
-
   const { collection: newDrawPile, item: card } = takeLastItemFromCollection(
     player.drawPile,
   );
@@ -44,6 +38,12 @@ export function drawCard(game: Game, playerId: string) {
 
   game = emitEventToPlayer(game, player.id, { type: "drewCard", card });
   game = emitEvent(game, { type: "playerDrewCard", username: player.username });
+
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
+  });
 
   return { success: true, game } as const;
 }

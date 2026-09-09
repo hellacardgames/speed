@@ -47,16 +47,16 @@ export function startGame(game: Game, playerId: string) {
   ({ game, cards } = initializeDrawPile(game, otherPlayer.id, cards));
   ({ game } = initializeHand(game, otherPlayer.id, cards));
 
-  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
-  game = emitEvent(game, {
-    type: "expirationUpdated",
-    expiresAt: game.expiresAt,
-  });
-
   game = { ...game, canPlayAt: Date.now() + CAN_PLAY_AT_DELAY_MS };
   game = emitEvent(game, {
     type: "canPlayAtUpdated",
     canPlayAt: game.canPlayAt,
+  });
+
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
   });
 
   return { success: true, game } as const;

@@ -38,12 +38,6 @@ export function playCard(
     return { success: false, error: "cardNotPlayable" } as const;
   }
 
-  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
-  game = emitEvent(game, {
-    type: "expirationUpdated",
-    expiresAt: game.expiresAt,
-  });
-
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     hand: removeItemFromCollection(p.hand, card),
@@ -69,6 +63,12 @@ export function playCard(
     game = transitionGameToCompleted(game);
     game = emitEvent(game, { type: "gameCompleted" });
   }
+
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
+  });
 
   return { success: true, game } as const;
 }

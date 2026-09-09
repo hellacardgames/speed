@@ -36,12 +36,6 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
     return { success: false, error: "canDraw" } as const;
   }
 
-  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
-  game = emitEvent(game, {
-    type: "expirationUpdated",
-    expiresAt: game.expiresAt,
-  });
-
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     hasNoPlayableCards: true,
@@ -78,6 +72,12 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
       canPlayAt: game.canPlayAt,
     });
   }
+
+  game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
+  game = emitEvent(game, {
+    type: "expirationUpdated",
+    expiresAt: game.expiresAt,
+  });
 
   return { success: true, game } as const;
 }
