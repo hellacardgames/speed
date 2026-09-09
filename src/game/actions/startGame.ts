@@ -1,4 +1,9 @@
-import { emitEvent, requireOtherPlayer, shuffle } from "@hellacardgames/lib";
+import {
+  emitEvent,
+  isPlayerAdmin,
+  requireOtherPlayer,
+  shuffle,
+} from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   CARDS,
@@ -17,7 +22,7 @@ export function startGame(game: Game, playerId: string) {
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
-  if (game.players.indexOf(player) !== 0) {
+  if (!isPlayerAdmin(game, player.id)) {
     return { success: false, error: "playerNotAdmin" } as const;
   }
   if (game.status !== "created") {
