@@ -2,12 +2,12 @@ import {
   addItemToCollection,
   emitEvent,
   removeItemFromCollection,
+  requirePlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import { EXPIRY_EXTENSION_MS } from "../constants.js";
 import { clearHasNoPlayableCardsIfNotApplicable } from "../lib/clearHasNoPlayableCardsIfNotApplicable.js";
 import { isCardPlayable } from "../lib/isCardPlayable.js";
-import { isOutOfCards } from "../lib/isOutOfCards.js";
 import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
 import { transitionGameToCompleted } from "../lib/transitionGameToCompleted.js";
 import type { Game } from "../types/Game.js";
@@ -18,7 +18,7 @@ export function playCard(
   cardId: string,
   isForOtherPlayerPile: boolean,
 ) {
-  const player = game.players.find((p) => p.id === playerId);
+  let player = game.players.find((p) => p.id === playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
@@ -63,7 +63,9 @@ export function playCard(
 
   game = clearHasNoPlayableCardsIfNotApplicable(game, otherPlayer.id);
 
-  if (isOutOfCards(game, player.id)) {
+  ({ player } = requirePlayer(game, player.id));
+
+  if (player.hand.length === 0 && player.drawPile.length === 0) {
     game = transitionGameToCompleted(game);
     game = emitEvent(game, { type: "gameCompleted" });
   }
