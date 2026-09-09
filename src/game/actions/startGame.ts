@@ -29,6 +29,7 @@ export function startGame(game: Game, playerId: string) {
   }
 
   game = transitionGameToStarted(game);
+  game = emitEvent(game, { type: "gameStarted" });
 
   const otherPlayer = requireOtherPlayer(game, player.id);
 
@@ -58,8 +59,6 @@ export function startGame(game: Game, playerId: string) {
     type: "canPlayAtUpdated",
     canPlayAt: game.canPlayAt,
   });
-
-  game = emitEvent(game, { type: "gameStarted" });
 
   return { success: true, game } as const;
 }
