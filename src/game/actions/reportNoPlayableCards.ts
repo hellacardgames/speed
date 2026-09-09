@@ -1,4 +1,9 @@
-import { emitEvent, shuffle, updatePlayer } from "@hellacardgames/lib";
+import {
+  emitEvent,
+  requireOtherPlayer,
+  shuffle,
+  updatePlayer,
+} from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   EXPIRY_EXTENSION_MS,
@@ -8,7 +13,6 @@ import { drawCardFromSidePileToCenterPile } from "../lib/drawCardFromSidePileToC
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
 import { initializeCenterPile } from "../lib/initializeCenterPile.js";
 import { initializeSidePile } from "../lib/initializeSidePile.js";
-import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
 import type { Game } from "../types/Game.js";
 
 export function reportNoPlayableCards(game: Game, playerId: string) {
@@ -43,7 +47,7 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
     hasNoPlayableCards: true,
   }));
 
-  const otherPlayer = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = requireOtherPlayer(game, player.id);
 
   if (otherPlayer.hasNoPlayableCards) {
     if (player.sidePile.length === 0 && otherPlayer.sidePile.length === 0) {

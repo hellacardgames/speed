@@ -1,11 +1,10 @@
-import { requirePlayer } from "@hellacardgames/lib";
+import { requireOtherPlayer, requirePlayer } from "@hellacardgames/lib";
 import { isCardPlayable } from "./isCardPlayable.js";
-import { requireOtherPlayer } from "./requireOtherPlayer.js";
 import type { Game } from "../types/Game.js";
 
 export function hasPlayableCard(game: Game, playerId: string) {
   const { player } = requirePlayer(game, playerId);
-  const otherPlayer = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = requireOtherPlayer(game, player.id);
   const targetPile1 = player.centerPile;
   const targetPile2 = otherPlayer.centerPile;
   for (const card of player.hand) {

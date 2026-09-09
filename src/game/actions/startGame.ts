@@ -1,4 +1,4 @@
-import { emitEvent, shuffle } from "@hellacardgames/lib";
+import { emitEvent, requireOtherPlayer, shuffle } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
   CARDS,
@@ -9,7 +9,6 @@ import { initializeCenterPile } from "../lib/initializeCenterPile.js";
 import { initializeDrawPile } from "../lib/initializeDrawPile.js";
 import { initializeHand } from "../lib/initializeHand.js";
 import { initializeSidePile } from "../lib/initializeSidePile.js";
-import { requireOtherPlayer } from "../lib/requireOtherPlayer.js";
 import { transitionGameToStarted } from "../lib/transitionGameToStarted.js";
 import type { Game } from "../types/Game.js";
 
@@ -31,7 +30,7 @@ export function startGame(game: Game, playerId: string) {
   game = transitionGameToStarted(game);
   game = emitEvent(game, { type: "gameStarted" });
 
-  const otherPlayer = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = requireOtherPlayer(game, player.id);
 
   let cards = [...CARDS] as const;
   cards = shuffle(cards);
