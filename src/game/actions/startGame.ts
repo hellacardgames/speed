@@ -1,7 +1,6 @@
 import {
   CARDS,
   emitEvent,
-  isPlayerAdmin,
   requireOtherPlayer,
   shuffle,
 } from "@hellacardgames/lib";
@@ -22,7 +21,7 @@ export function startGame(game: Game, playerId: string) {
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
-  if (!isPlayerAdmin(game, player.id)) {
+  if (player.id !== game.adminId) {
     return { success: false, error: "playerNotAdmin" } as const;
   }
   if (game.status !== "created") {

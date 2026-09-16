@@ -24,6 +24,7 @@ export function createGame(userId: string, username: string) {
     expiresAt: createdAt + EXPIRY_EXTENSION_MS,
     chatMessages: [],
     players: [player],
+    adminId: player.id,
     canPlayAt: 0,
   };
 
