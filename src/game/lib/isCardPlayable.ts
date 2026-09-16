@@ -1,7 +1,10 @@
 import type { Card } from "../types/Card.js";
+import { getRankValue } from "./getRankValue.js";
 
 export function isCardPlayable(card: Card, targetPile: readonly Card[]) {
   const targetCard = targetPile[targetPile.length - 1]!;
-  const diff = Math.abs(card.rank - targetCard.rank) % 11;
+  const rankValue = getRankValue(card.rank);
+  const targetRankValue = getRankValue(targetCard.rank);
+  const diff = Math.abs(rankValue - targetRankValue) % 11;
   return diff === 1;
 }
