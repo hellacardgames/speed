@@ -1,4 +1,5 @@
 import {
+  CARDS,
   emitEvent,
   isPlayerAdmin,
   requireOtherPlayer,
@@ -6,7 +7,6 @@ import {
 } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
-  CARDS,
   EXPIRY_EXTENSION_MS,
   MIN_PLAYERS,
 } from "../constants.js";

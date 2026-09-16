@@ -1,5 +1,5 @@
+import { getRankValue } from "@hellacardgames/lib";
 import type { Card } from "../types/Card.js";
-import { getRankValue } from "./getRankValue.js";
 
 export function isCardPlayable(card: Card, targetPile: readonly Card[]) {
   const targetCard = targetPile[targetPile.length - 1]!;
