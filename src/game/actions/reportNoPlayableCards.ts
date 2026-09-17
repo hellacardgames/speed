@@ -51,7 +51,13 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
       ({ game, cards } = initializeSidePile(game, player.id, cards));
       ({ game, cards } = initializeCenterPile(game, player.id, cards));
       ({ game, cards } = initializeCenterPile(game, otherPlayer.id, cards));
-      ({ game } = initializeSidePile(game, otherPlayer.id, cards));
+      ({ game, cards } = initializeSidePile(game, otherPlayer.id, cards));
+
+      // Stash the remaining cards.
+      game = updatePlayer(game, player.id, (p) => ({
+        ...p,
+        centerPile: [...cards, ...p.centerPile],
+      }));
     } else {
       game = moveCardFromSidePileToCenterPile(game, player.id);
       game = moveCardFromSidePileToCenterPile(game, otherPlayer.id);
