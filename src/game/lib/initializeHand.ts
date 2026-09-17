@@ -1,5 +1,5 @@
 import {
-  emitEvent,
+  emitEventToOtherPlayers,
   emitEventToPlayer,
   requirePlayer,
   updatePlayer,
@@ -30,12 +30,11 @@ export function initializeHand(
   game = updatePlayer(game, player.id, (p) => ({ ...p, hand }));
 
   game = emitEventToPlayer(game, player.id, {
-    type: "handInitialized",
+    type: "playerHandInitialized",
     cards: hand,
   });
-  game = emitEvent(game, {
-    type: "playerHandInitialized",
-    username: player.username,
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerHandInitialized",
     numCards: hand.length,
   });
 

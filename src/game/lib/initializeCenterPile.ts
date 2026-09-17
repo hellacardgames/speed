@@ -1,4 +1,9 @@
-import { emitEvent, requirePlayer, updatePlayer } from "@hellacardgames/lib";
+import {
+  emitEventToOtherPlayers,
+  emitEventToPlayer,
+  requirePlayer,
+  updatePlayer,
+} from "@hellacardgames/lib";
 import type { Card } from "../types/Card.js";
 import type { StartedGame } from "../types/Game.js";
 
@@ -22,9 +27,13 @@ export function initializeCenterPile(
   cards = cards.slice(1);
 
   game = updatePlayer(game, player.id, (p) => ({ ...p, centerPile: [card] }));
-  game = emitEvent(game, {
+
+  game = emitEventToPlayer(game, player.id, {
     type: "playerCenterPileInitialized",
-    username: player.username,
+    card,
+  });
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerCenterPileInitialized",
     card,
   });
 

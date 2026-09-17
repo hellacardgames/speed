@@ -9,7 +9,7 @@ import {
   EXPIRY_EXTENSION_MS,
   MAX_HAND_SIZE,
 } from "../constants.js";
-import { drawCardFromSidePileToCenterPile } from "../lib/drawCardFromSidePileToCenterPile.js";
+import { moveCardFromSidePileToCenterPile } from "../lib/moveCardFromSidePileToCenterPile.js";
 import { hasPlayableCard } from "../lib/hasPlayableCard.js";
 import { initializeCenterPile } from "../lib/initializeCenterPile.js";
 import { initializeSidePile } from "../lib/initializeSidePile.js";
@@ -53,8 +53,8 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
       ({ game, cards } = initializeCenterPile(game, otherPlayer.id, cards));
       ({ game } = initializeSidePile(game, otherPlayer.id, cards));
     } else {
-      game = drawCardFromSidePileToCenterPile(game, player.id);
-      game = drawCardFromSidePileToCenterPile(game, otherPlayer.id);
+      game = moveCardFromSidePileToCenterPile(game, player.id);
+      game = moveCardFromSidePileToCenterPile(game, otherPlayer.id);
     }
 
     game = updatePlayer(game, player.id, (p) => ({

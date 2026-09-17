@@ -1,4 +1,9 @@
-import { emitEvent, requirePlayer, updatePlayer } from "@hellacardgames/lib";
+import {
+  emitEventToOtherPlayers,
+  emitEventToPlayer,
+  requirePlayer,
+  updatePlayer,
+} from "@hellacardgames/lib";
 import { INITIAL_DRAW_PILE_SIZE } from "../constants.js";
 import type { Card } from "../types/Card.js";
 import type { StartedGame } from "../types/Game.js";
@@ -23,9 +28,13 @@ export function initializeDrawPile(
   cards = cards.slice(INITIAL_DRAW_PILE_SIZE);
 
   game = updatePlayer(game, player.id, (p) => ({ ...p, drawPile }));
-  game = emitEvent(game, {
+
+  game = emitEventToPlayer(game, player.id, {
     type: "playerDrawPileInitialized",
-    username: player.username,
+    numCards: drawPile.length,
+  });
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerDrawPileInitialized",
     numCards: drawPile.length,
   });
 

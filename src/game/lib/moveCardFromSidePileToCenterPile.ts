@@ -1,13 +1,14 @@
 import {
   addItemToCollection,
-  emitEvent,
+  emitEventToOtherPlayers,
+  emitEventToPlayer,
   requirePlayer,
   takeLastItemFromCollection,
   updatePlayer,
 } from "@hellacardgames/lib";
 import type { StartedGame } from "../types/Game.js";
 
-export function drawCardFromSidePileToCenterPile(
+export function moveCardFromSidePileToCenterPile(
   game: StartedGame,
   playerId: string,
 ): StartedGame {
@@ -23,9 +24,12 @@ export function drawCardFromSidePileToCenterPile(
     centerPile: addItemToCollection(p.centerPile, card),
   }));
 
-  game = emitEvent(game, {
-    type: "cardDrawnFromSidePileToCenterPile",
-    username: player.username,
+  game = emitEventToPlayer(game, player.id, {
+    type: "playerMovedCardFromSidePileToCenterPile",
+    card,
+  });
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerMovedCardFromSidePileToCenterPile",
     card,
   });
 

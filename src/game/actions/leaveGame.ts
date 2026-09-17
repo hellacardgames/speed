@@ -9,8 +9,10 @@ export function leaveGame(game: Game, playerId: string) {
     return { success: false, error: "playerNotFound" } as const;
   }
 
-  game = emitEvent(game, { type: "playerLeft", username: player.username });
   game = removePlayer(game, player.id);
+  game = emitEvent(game, {
+    type: "otherPlayerLeft",
+  });
 
   if (game.players.length > 0 && player.id === game.adminId) {
     const newAdmin = requirePlayerOne(game);

@@ -1,6 +1,7 @@
 import {
   addItemToCollection,
   emitEvent,
+  emitEventToOtherPlayers,
   emitEventToPlayer,
   takeLastItemFromCollection,
   updatePlayer,
@@ -36,8 +37,10 @@ export function drawCard(game: Game, playerId: string) {
     hand: addItemToCollection(p.hand, card),
   }));
 
-  game = emitEventToPlayer(game, player.id, { type: "drewCard", card });
-  game = emitEvent(game, { type: "playerDrewCard", username: player.username });
+  game = emitEventToPlayer(game, player.id, { type: "playerDrewCard", card });
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerDrewCard",
+  });
 
   game = { ...game, expiresAt: Date.now() + EXPIRY_EXTENSION_MS };
   game = emitEvent(game, {

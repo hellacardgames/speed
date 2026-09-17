@@ -13,27 +13,9 @@ export type GameEvent =
       readonly canPlayAt: number;
     }
   | {
-      readonly type: "cardDrawnFromSidePileToCenterPile";
-      readonly id: string;
-      readonly username: string;
-      readonly card: Card;
-    }
-  | {
-      readonly type: "cardPlayed";
-      readonly id: string;
-      readonly username: string;
-      readonly card: Card;
-      readonly isForOtherPlayerPile: boolean;
-    }
-  | {
       readonly type: "chat";
       readonly id: string;
       readonly message: ChatMessage;
-    }
-  | {
-      readonly type: "drewCard";
-      readonly id: string;
-      readonly card: Card;
     }
   | {
       readonly type: "expirationUpdated";
@@ -53,46 +35,82 @@ export type GameEvent =
       readonly id: string;
     }
   | {
-      readonly type: "handInitialized";
+      readonly type: "otherPlayerCenterPileInitialized";
       readonly id: string;
-      readonly cards: readonly Card[];
+      readonly card: Card;
+    }
+  | {
+      readonly type: "otherPlayerDrawPileInitialized";
+      readonly id: string;
+      readonly numCards: number;
+    }
+  | {
+      readonly type: "otherPlayerDrewCard";
+      readonly id: string;
+    }
+  | {
+      readonly type: "otherPlayerHandInitialized";
+      readonly id: string;
+      readonly numCards: number;
+    }
+  | {
+      readonly type: "otherPlayerJoined";
+      readonly id: string;
+      readonly username: string;
+    }
+  | {
+      readonly type: "otherPlayerLeft";
+      readonly id: string;
+    }
+  | {
+      readonly type: "otherPlayerMovedCardFromSidePileToCenterPile";
+      readonly id: string;
+      readonly card: Card;
+    }
+  | {
+      readonly type: "otherPlayerPlayedCard";
+      readonly id: string;
+      readonly card: Card;
+      readonly isForOtherPlayerPile: boolean;
+    }
+  | {
+      readonly type: "otherPlayerSidePileInitialized";
+      readonly id: string;
+      readonly numCards: number;
     }
   | {
       readonly type: "playerCenterPileInitialized";
       readonly id: string;
-      readonly username: string;
       readonly card: Card;
     }
   | {
       readonly type: "playerDrawPileInitialized";
       readonly id: string;
-      readonly username: string;
       readonly numCards: number;
     }
   | {
       readonly type: "playerDrewCard";
       readonly id: string;
-      readonly username: string;
+      readonly card: Card;
     }
   | {
       readonly type: "playerHandInitialized";
       readonly id: string;
-      readonly username: string;
-      readonly numCards: number;
+      readonly cards: readonly Card[];
     }
   | {
-      readonly type: "playerJoined";
+      readonly type: "playerMovedCardFromSidePileToCenterPile";
       readonly id: string;
-      readonly username: string;
+      readonly card: Card;
     }
   | {
-      readonly type: "playerLeft";
+      readonly type: "playerPlayedCard";
       readonly id: string;
-      readonly username: string;
+      readonly card: Card;
+      readonly isForOtherPlayerPile: boolean;
     }
   | {
       readonly type: "playerSidePileInitialized";
       readonly id: string;
-      readonly username: string;
       readonly numCards: number;
     };

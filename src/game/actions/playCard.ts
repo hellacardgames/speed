@@ -1,6 +1,8 @@
 import {
   addItemToCollection,
   emitEvent,
+  emitEventToOtherPlayers,
+  emitEventToPlayer,
   removeItemFromCollection,
   requireOtherPlayer,
   requirePlayer,
@@ -48,9 +50,13 @@ export function playCard(
     centerPile: addItemToCollection(p.centerPile, card),
   }));
 
-  game = emitEvent(game, {
-    type: "cardPlayed",
-    username: player.username,
+  game = emitEventToPlayer(game, player.id, {
+    type: "playerPlayedCard",
+    card,
+    isForOtherPlayerPile,
+  });
+  game = emitEventToOtherPlayers(game, player.id, {
+    type: "otherPlayerPlayedCard",
     card,
     isForOtherPlayerPile,
   });
