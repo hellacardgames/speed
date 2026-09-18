@@ -1,7 +1,7 @@
 import {
   getClientStateAndClearEventsFactory,
-  getOtherPlayer,
-  requirePlayer,
+  getPlayer,
+  tryGetOtherPlayer,
 } from "@hellacardgames/lib";
 import type { ClientState } from "../types/ClientState.js";
 import type { Game } from "../types/Game.js";
@@ -10,7 +10,7 @@ export const getClientStateAndClearEvents = getClientStateAndClearEventsFactory<
   Game,
   ClientState
 >((game, player) => {
-  const otherPlayer = getOtherPlayer(game, player.id);
+  const { otherPlayer } = tryGetOtherPlayer(game, player.id);
 
   return {
     status: game.status,
@@ -34,7 +34,7 @@ export const getClientStateAndClearEvents = getClientStateAndClearEventsFactory<
             otherPlayer.centerPile[otherPlayer.centerPile.length - 1] ?? null,
         }
       : null,
-    adminUsername: requirePlayer(game, game.adminId).player.username,
+    adminUsername: getPlayer(game, game.adminId).player.username,
     expiresAt: game.expiresAt,
     chatMessages: game.chatMessages,
     hand: player.hand,

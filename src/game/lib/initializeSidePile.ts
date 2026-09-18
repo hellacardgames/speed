@@ -1,7 +1,7 @@
 import {
-  emitEventToOtherPlayers,
+  emitEventToOtherPlayer,
   emitEventToPlayer,
-  requirePlayer,
+  getPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import { INITIAL_SIDE_PILE_SIZE } from "../constants.js";
@@ -22,7 +22,7 @@ export function initializeSidePile(
     throw new Error("Not enough cards.");
   }
 
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
 
   const sidePile = cards.slice(0, INITIAL_SIDE_PILE_SIZE);
   cards = cards.slice(INITIAL_SIDE_PILE_SIZE);
@@ -33,7 +33,7 @@ export function initializeSidePile(
     type: "playerSidePileInitialized",
     numCards: sidePile.length,
   });
-  game = emitEventToOtherPlayers(game, player.id, {
+  game = emitEventToOtherPlayer(game, player.id, {
     type: "otherPlayerSidePileInitialized",
     numCards: sidePile.length,
   });

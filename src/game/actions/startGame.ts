@@ -1,8 +1,9 @@
 import {
   CARDS,
   emitEvent,
-  requireOtherPlayer,
+  getOtherPlayer,
   shuffle,
+  tryGetPlayer,
 } from "@hellacardgames/lib";
 import {
   CAN_PLAY_AT_DELAY_MS,
@@ -17,7 +18,7 @@ import { transitionGameToStarted } from "../lib/transitionGameToStarted.js";
 import type { Game } from "../types/Game.js";
 
 export function startGame(game: Game, playerId: string) {
-  const player = game.players.find((p) => p.id === playerId);
+  const { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
@@ -34,7 +35,7 @@ export function startGame(game: Game, playerId: string) {
   game = transitionGameToStarted(game);
   game = emitEvent(game, { type: "gameStarted" });
 
-  const { otherPlayer } = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = getOtherPlayer(game, player.id);
 
   let cards = [...CARDS] as const;
   cards = shuffle(cards);

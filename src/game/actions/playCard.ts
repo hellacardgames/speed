@@ -1,11 +1,12 @@
 import {
   addItemToCollection,
   emitEvent,
-  emitEventToOtherPlayers,
+  emitEventToOtherPlayer,
   emitEventToPlayer,
+  getOtherPlayer,
+  getPlayer,
   removeItemFromCollection,
-  requireOtherPlayer,
-  requirePlayer,
+  tryGetPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import { EXPIRY_EXTENSION_MS } from "../constants.js";
@@ -20,7 +21,7 @@ export function playCard(
   cardId: string,
   isForOtherPlayerPile: boolean,
 ) {
-  let player = game.players.find((p) => p.id === playerId);
+  let { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
@@ -34,7 +35,7 @@ export function playCard(
   if (!card) {
     return { success: false, error: "cardNotFound" } as const;
   }
-  const { otherPlayer } = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = getOtherPlayer(game, player.id);
   const targetPlayer = isForOtherPlayerPile ? otherPlayer : player;
   if (!isCardPlayable(card, targetPlayer.centerPile)) {
     return { success: false, error: "cardNotPlayable" } as const;
@@ -55,7 +56,7 @@ export function playCard(
     card,
     isForOtherPlayerPile,
   });
-  game = emitEventToOtherPlayers(game, player.id, {
+  game = emitEventToOtherPlayer(game, player.id, {
     type: "otherPlayerPlayedCard",
     card,
     isForOtherPlayerPile,
@@ -63,7 +64,7 @@ export function playCard(
 
   game = clearHasNoPlayableCardsIfNotApplicable(game, otherPlayer.id);
 
-  ({ player } = requirePlayer(game, player.id));
+  ({ player } = getPlayer(game, player.id));
 
   if (player.hand.length === 0 && player.drawPile.length === 0) {
     game = transitionGameToCompleted(game);

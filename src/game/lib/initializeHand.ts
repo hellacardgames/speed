@@ -1,7 +1,7 @@
 import {
-  emitEventToOtherPlayers,
+  emitEventToOtherPlayer,
   emitEventToPlayer,
-  requirePlayer,
+  getPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import { INITIAL_HAND_SIZE } from "../constants.js";
@@ -22,7 +22,7 @@ export function initializeHand(
     throw new Error("Not enough cards.");
   }
 
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
 
   const hand = cards.slice(0, INITIAL_HAND_SIZE);
   cards = cards.slice(INITIAL_HAND_SIZE);
@@ -33,7 +33,7 @@ export function initializeHand(
     type: "playerHandInitialized",
     cards: hand,
   });
-  game = emitEventToOtherPlayers(game, player.id, {
+  game = emitEventToOtherPlayer(game, player.id, {
     type: "otherPlayerHandInitialized",
     numCards: hand.length,
   });

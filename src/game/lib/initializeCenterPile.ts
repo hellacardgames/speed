@@ -1,7 +1,7 @@
 import {
-  emitEventToOtherPlayers,
+  emitEventToOtherPlayer,
   emitEventToPlayer,
-  requirePlayer,
+  getPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import type { Card } from "../types/Card.js";
@@ -17,7 +17,7 @@ export function initializeCenterPile(
   playerId: string,
   cards: readonly Card[],
 ): InitializeCenterPileResult {
-  const { player } = requirePlayer(game, playerId);
+  const { player } = getPlayer(game, playerId);
 
   const card = cards[0];
   if (!card) {
@@ -32,7 +32,7 @@ export function initializeCenterPile(
     type: "playerCenterPileInitialized",
     card,
   });
-  game = emitEventToOtherPlayers(game, player.id, {
+  game = emitEventToOtherPlayer(game, player.id, {
     type: "otherPlayerCenterPileInitialized",
     card,
   });

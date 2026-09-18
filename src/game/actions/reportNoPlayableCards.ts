@@ -1,7 +1,8 @@
 import {
   emitEvent,
-  requireOtherPlayer,
+  getOtherPlayer,
   shuffle,
+  tryGetPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import {
@@ -16,7 +17,7 @@ import { initializeSidePile } from "../lib/initializeSidePile.js";
 import type { Game } from "../types/Game.js";
 
 export function reportNoPlayableCards(game: Game, playerId: string) {
-  const player = game.players.find((p) => p.id === playerId);
+  const { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
@@ -41,7 +42,7 @@ export function reportNoPlayableCards(game: Game, playerId: string) {
     hasNoPlayableCards: true,
   }));
 
-  const { otherPlayer } = requireOtherPlayer(game, player.id);
+  const { otherPlayer } = getOtherPlayer(game, player.id);
 
   if (otherPlayer.hasNoPlayableCards) {
     if (player.sidePile.length === 0 && otherPlayer.sidePile.length === 0) {

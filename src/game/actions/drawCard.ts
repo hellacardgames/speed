@@ -1,16 +1,17 @@
 import {
   addItemToCollection,
   emitEvent,
-  emitEventToOtherPlayers,
+  emitEventToOtherPlayer,
   emitEventToPlayer,
   takeLastItemFromCollection,
+  tryGetPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
 import { EXPIRY_EXTENSION_MS, MAX_HAND_SIZE } from "../constants.js";
 import type { Game } from "../types/Game.js";
 
 export function drawCard(game: Game, playerId: string) {
-  const player = game.players.find((p) => p.id === playerId);
+  const { player } = tryGetPlayer(game, playerId);
   if (!player) {
     return { success: false, error: "playerNotFound" } as const;
   }
@@ -38,7 +39,7 @@ export function drawCard(game: Game, playerId: string) {
   }));
 
   game = emitEventToPlayer(game, player.id, { type: "playerDrewCard", card });
-  game = emitEventToOtherPlayers(game, player.id, {
+  game = emitEventToOtherPlayer(game, player.id, {
     type: "otherPlayerDrewCard",
   });
 
