@@ -1,9 +1,9 @@
 import {
-  addItemToCollection,
+  addItem,
   emitEventToOtherPlayer,
   emitEventToPlayer,
   getPlayer,
-  takeLastItemFromCollection,
+  takeLastItem,
   updatePlayer,
 } from "@hellacardgames/lib";
 import type { StartedGame } from "../types/Game.js";
@@ -14,14 +14,12 @@ export function moveCardFromSidePileToCenterPile(
 ): StartedGame {
   const { player } = getPlayer(game, playerId);
 
-  const { collection: newSidePile, item: card } = takeLastItemFromCollection(
-    player.sidePile,
-  );
+  const { collection: newSidePile, item: card } = takeLastItem(player.sidePile);
 
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     sidePile: newSidePile,
-    centerPile: addItemToCollection(p.centerPile, card),
+    centerPile: addItem(p.centerPile, card),
   }));
 
   game = emitEventToPlayer(game, player.id, {

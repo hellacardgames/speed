@@ -1,11 +1,11 @@
 import {
-  addItemToCollection,
+  addItem,
   emitEvent,
   emitEventToOtherPlayer,
   emitEventToPlayer,
   getOtherPlayer,
   getPlayer,
-  removeItemFromCollection,
+  removeItem,
   tryGetPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
@@ -43,12 +43,12 @@ export function playCard(
 
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
-    hand: removeItemFromCollection(p.hand, card),
+    hand: removeItem(p.hand, card),
   }));
 
   game = updatePlayer(game, targetPlayer.id, (p) => ({
     ...p,
-    centerPile: addItemToCollection(p.centerPile, card),
+    centerPile: addItem(p.centerPile, card),
   }));
 
   game = emitEventToPlayer(game, player.id, {

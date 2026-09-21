@@ -1,9 +1,9 @@
 import {
-  addItemToCollection,
+  addItem,
   emitEvent,
   emitEventToOtherPlayer,
   emitEventToPlayer,
-  takeLastItemFromCollection,
+  takeLastItem,
   tryGetPlayer,
   updatePlayer,
 } from "@hellacardgames/lib";
@@ -28,14 +28,12 @@ export function drawCard(game: Game, playerId: string) {
     return { success: false, error: "drawPileEmpty" } as const;
   }
 
-  const { collection: newDrawPile, item: card } = takeLastItemFromCollection(
-    player.drawPile,
-  );
+  const { collection: newDrawPile, item: card } = takeLastItem(player.drawPile);
 
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     drawPile: newDrawPile,
-    hand: addItemToCollection(p.hand, card),
+    hand: addItem(p.hand, card),
   }));
 
   game = emitEventToPlayer(game, player.id, { type: "playerDrewCard", card });
