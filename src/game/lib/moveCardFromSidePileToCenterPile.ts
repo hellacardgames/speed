@@ -1,5 +1,5 @@
 import {
-  addItem,
+  appendItem,
   emitEventToOtherPlayer,
   emitEventToPlayer,
   getPlayer,
@@ -19,7 +19,7 @@ export function moveCardFromSidePileToCenterPile(
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     sidePile: newSidePile,
-    centerPile: addItem(p.centerPile, card),
+    centerPile: appendItem(p.centerPile, card),
   }));
 
   game = emitEventToPlayer(game, player.id, {

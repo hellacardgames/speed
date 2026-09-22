@@ -1,5 +1,5 @@
 import {
-  addItem,
+  appendItem,
   emitEvent,
   emitEventToOtherPlayer,
   emitEventToPlayer,
@@ -33,7 +33,7 @@ export function drawCard(game: Game, playerId: string) {
   game = updatePlayer(game, player.id, (p) => ({
     ...p,
     drawPile: newDrawPile,
-    hand: addItem(p.hand, card),
+    hand: appendItem(p.hand, card),
   }));
 
   game = emitEventToPlayer(game, player.id, { type: "playerDrewCard", card });

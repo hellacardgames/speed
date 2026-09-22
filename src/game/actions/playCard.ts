@@ -1,5 +1,5 @@
 import {
-  addItem,
+  appendItem,
   emitEvent,
   emitEventToOtherPlayer,
   emitEventToPlayer,
@@ -48,7 +48,7 @@ export function playCard(
 
   game = updatePlayer(game, targetPlayer.id, (p) => ({
     ...p,
-    centerPile: addItem(p.centerPile, card),
+    centerPile: appendItem(p.centerPile, card),
   }));
 
   game = emitEventToPlayer(game, player.id, {
