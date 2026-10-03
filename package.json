@@ -57,6 +57,16 @@
         "types": "./dist/client/index.d.cts",
         "default": "./dist/client/index.cjs"
       }
+    },
+    "./react-client": {
+      "import": {
+        "types": "./dist/react-client/index.d.mts",
+        "default": "./dist/react-client/index.mjs"
+      },
+      "require": {
+        "types": "./dist/react-client/index.d.cts",
+        "default": "./dist/react-client/index.cjs"
+      }
     }
   },
   "files": [
@@ -75,11 +85,14 @@
   "devDependencies": {
     "@eslint/js": "^10.0.1",
     "@types/node": "^26.1.0",
+    "@types/react": "^19.0.0",
     "eslint": "^10.6.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-react-hooks": "^7.1.1",
     "globals": "^17.7.0",
     "jiti": "^2.7.0",
     "prettier": "^3.9.4",
+    "react": "^19.0.0",
     "tsdown": "^0.22.3",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.62.1",
@@ -88,5 +101,13 @@
   "dependencies": {
     "@hellacardgames/lib": "^0.39.0",
     "zod": "^4.4.3"
+  },
+  "peerDependencies": {
+    "react": "^19.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
   }
 }
