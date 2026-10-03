@@ -32,8 +32,8 @@ type GetEventsAndClearAcknowledgedError = Extract<
 
 export function useGameStore(
   baseUrl: string,
-  gameId: string | null,
-  playerId: string | null,
+  gameId: string,
+  playerId: string,
 ) {
   const client = useMemo(() => createClient(baseUrl), [baseUrl]);
 
@@ -46,9 +46,6 @@ export function useGameStore(
   >(null);
 
   useEffect(() => {
-    if (gameId === null || playerId === null) {
-      return;
-    }
     const doGetClientState = async () => {
       const result = await client.getClientStateAndClearEvents(
         gameId,
