@@ -37,7 +37,6 @@ export const getClientStateAndClearEvents = getClientStateAndClearEventsFactory<
     adminUsername: getPlayer(game, game.adminId).player.username,
     expiresAt: game.expiresAt,
     chatMessages: game.chatMessages,
-    hand: player.hand,
     canPlayAt: game.status === "started" ? game.canPlayAt : null,
   };
 });
